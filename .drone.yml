@@ -11,7 +11,7 @@ pipeline:
       - sh .drone.sh
 
   publish:
-    image: kowalatech/drone-docker
+    image: plugins/docker
     repo: kowalatech/drone-docker
     tags: [ "latest" ]
     secrets: [ docker_username, docker_password ]
