@@ -13,7 +13,7 @@ pipeline:
   publish:
     image: plugins/docker
     repo: kowalatech/drone-docker
-    tags: [ "latest", "17", "17.12" ]
+    tags: [ "latest" ]
     secrets: [ docker_username, docker_password ]
     dockerfile: docker/Dockerfile
     when:
