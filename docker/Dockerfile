@@ -6,4 +6,4 @@ RUN apk update && apk upgrade && \
     apk add --no-cache bash git openssh
 
 ADD release/linux/amd64/drone-docker /bin/
-ENTRYPOINT PLUGIN_TAGS=latest,`git describe --tags` /usr/local/bin/dockerd-entrypoint.sh /bin/drone-docker
+ENTRYPOINT ["/usr/local/bin/dockerd-entrypoint.sh", "/bin/drone-docker"]
