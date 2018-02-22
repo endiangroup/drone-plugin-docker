@@ -250,17 +250,12 @@ func run(c *cli.Context) error {
 	}
 
 	if c.Bool("tags.auto") {
-		if docker.UseDefaultTag( // return true if tag event or default branch
-			c.String("commit.ref"),
-			c.String("repo.branch"),
-		) {
-			plugin.Build.Tags = docker.DefaultTagSuffix(
-				c.String("commit.ref"),
-				c.String("tags.suffix"),
-			)
+
+		if gitTag, err := docker.CurrentGitTag(); err == nil {
+			fmt.Printf("Use latest tag '%s' from git\n", gitTag)
+			plugin.Build.Tags = append(plugin.Build.Tags, gitTag)
 		} else {
-			logrus.Printf("skipping automated docker build for %s", c.String("commit.ref"))
-			return nil
+			fmt.Printf("Auto tags specificied, but can't get tag from git: %s\n", err)
 		}
 	}
 

@@ -2,6 +2,7 @@ package docker
 
 import (
 	"fmt"
+	"os/exec"
 	"strings"
 
 	"github.com/coreos/go-semver/semver"
@@ -51,6 +52,16 @@ func DefaultTags(ref string) []string {
 		fmt.Sprintf("%d.%d", version.Major, version.Minor),
 		fmt.Sprintf("%d.%d.%d", version.Major, version.Minor, version.Patch),
 	}
+}
+
+func CurrentGitTag() (string, error) {
+
+	out, err := exec.Command("git", "describe", "--tags").Output()
+
+	if err != nil {
+		return "", err
+	}
+	return string(out), nil
 }
 
 // UseDefaultTag for keep only default branch for latest tag
