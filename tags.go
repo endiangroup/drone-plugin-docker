@@ -61,7 +61,7 @@ func CurrentGitTag() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return string(out), nil
+	return strings.Trim(string(out), "\n"), nil
 }
 
 // UseDefaultTag for keep only default branch for latest tag
