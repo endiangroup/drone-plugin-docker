@@ -1,6 +1,6 @@
 workspace:
   base: /go
-  path: src/github.com/drone-plugins/drone-docker
+  path: src/github.com/kowala-tech/drone-plugin-docker
 
 pipeline:
   build:
