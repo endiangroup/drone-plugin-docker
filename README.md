@@ -2,6 +2,24 @@
 
 Drone plugin to build and publish Docker images to a container registry.
 
+This fork adds the facility to tag images using the current git tag. The functionality `auto_tag` has been replaced, and can be used as follows in a .drone.yml:
+
+```
+  some_pipeline:
+    image: kowalatech/drone-docker
+    repo: kowalatech/faucet
+    secrets: [ docker_username, docker_password ]
+    tag: my-tag
+    privileged: true # may be required for docker-in-docker
+    auto_tag: true   # adds the durrent git tag
+    dockerfile: faucet.Dockerfile
+    when:
+      event: [push]
+      branch: [master]
+```
+
+In that pipeline, git pushes to the master branch would result in a docker image tagged with `my-tag` and the current git tag, if ther is one.
+
 ## Build
 
 Build the binary with the following commands:
