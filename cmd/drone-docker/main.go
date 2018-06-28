@@ -262,13 +262,7 @@ func run(c *cli.Context) error {
 	}
 
 	if c.Bool("tags.auto") {
-
-		if gitTag, err := docker.CurrentGitTag(); err == nil {
-			fmt.Printf("Use latest tag '%s' from git\n", gitTag)
-			plugin.Build.Tags = append(plugin.Build.Tags, gitTag)
-		} else {
-			fmt.Printf("Auto tags specificied, but can't get tag from git: %s\n", err)
-		}
+		plugin.Build.Tags = docker.DefaultTag(c.String("commit.ref"))
 	}
 
 	return plugin.Exec()
