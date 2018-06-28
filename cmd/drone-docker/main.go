@@ -145,6 +145,11 @@ func main() {
 			Usage:  "build args",
 			EnvVar: "PLUGIN_BUILD_ARGS_FROM_ENV",
 		},
+		cli.StringFlag{
+			Name:   "target",
+			Usage:  "build target",
+			EnvVar: "PLUGIN_TARGET",
+		},
 		cli.BoolFlag{
 			Name:   "squash",
 			Usage:  "squash the layers at build time",
@@ -201,6 +206,11 @@ func main() {
 			Usage:  "repository default branch",
 			EnvVar: "DRONE_REPO_BRANCH",
 		},
+		cli.BoolFlag{
+			Name:   "no-cache",
+			Usage:  "do not use cached intermediate containers",
+			EnvVar: "PLUGIN_NO_CACHE",
+		},
 	}
 
 	if err := app.Run(os.Args); err != nil {
@@ -226,11 +236,13 @@ func run(c *cli.Context) error {
 			Tags:        c.StringSlice("tags"),
 			Args:        c.StringSlice("args"),
 			ArgsEnv:     c.StringSlice("args-from-env"),
+			Target:      c.String("target"),
 			Squash:      c.Bool("squash"),
 			Pull:        c.BoolT("pull-image"),
 			Compress:    c.Bool("compress"),
 			Repo:        c.String("repo"),
 			LabelSchema: c.StringSlice("label-schema"),
+			NoCache:     c.Bool("no-cache"),
 		},
 		Daemon: docker.Daemon{
 			Registry:      c.String("docker.registry"),
