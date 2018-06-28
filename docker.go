@@ -44,11 +44,13 @@ type (
 		Tags        []string // Docker build tags
 		Args        []string // Docker build args
 		ArgsEnv     []string // Docker build args from env
+		Target      string   // Docker build target
 		Squash      bool     // Docker build squash
 		Pull        bool     // Docker build pull
 		Compress    bool     // Docker build compress
 		Repo        string   // Docker build repository
 		LabelSchema []string // Label schema map
+		NoCache     bool     // Docker build no-cache
 	}
 
 	// Plugin defines the Docker plugin parameters.
@@ -198,11 +200,17 @@ func commandBuild(build Build) *exec.Cmd {
 	if build.Pull {
 		args = append(args, "--pull=true")
 	}
+	if build.NoCache {
+		args = append(args, "--no-cache")
+	}
 	for _, arg := range build.ArgsEnv {
 		addProxyValue(&build, arg)
 	}
 	for _, arg := range build.Args {
 		args = append(args, "--build-arg", arg)
+	}
+	if build.Target != "" {
+		args = append(args, "--target", build.Target)
 	}
 
 	labelSchema := []string{
