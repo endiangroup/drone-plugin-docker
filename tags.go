@@ -8,33 +8,24 @@ import (
 	"github.com/coreos/go-semver/semver"
 )
 
-// DefaultTagSuffix returns a set of default suggested tags
-// based on the commit ref with an attached suffix.
-func DefaultTagSuffix(ref, suffix string) []string {
-	tags := DefaultTags(ref)
-	if len(suffix) == 0 {
-		return tags
-	}
-	for i, tag := range tags {
-		if tag == "latest" {
-			tags[i] = suffix
-		} else {
-			tags[i] = fmt.Sprintf("%s-%s", tag, suffix)
-		}
-	}
-	return tags
-}
-
 // DefaultTags returns a set of default suggested tags based on
 // the commit ref.
 func DefaultTags(ref string) []string {
+	if strings.HasPrefix(ref, "refs/heads/") {
+		branch := stripHeadPrefix(ref)
+		tag := branch
+		if tag == "master" {
+			tag = "latest"
+		}
+		return []string{tag}
+	}
 	if !strings.HasPrefix(ref, "refs/tags/") {
-		return []string{"latest"}
+		return []string{"dev"}
 	}
 	v := stripTagPrefix(ref)
 	version, err := semver.NewVersion(v)
 	if err != nil {
-		return []string{"latest"}
+		return []string{"dev"}
 	}
 	if version.PreRelease != "" || version.Metadata != "" {
 		return []string{
@@ -43,11 +34,13 @@ func DefaultTags(ref string) []string {
 	}
 	if version.Major == 0 {
 		return []string{
+			"latest",
 			fmt.Sprintf("%d.%d", version.Major, version.Minor),
 			fmt.Sprintf("%d.%d.%d", version.Major, version.Minor, version.Patch),
 		}
 	}
 	return []string{
+		"latest",
 		fmt.Sprint(version.Major),
 		fmt.Sprintf("%d.%d", version.Major, version.Minor),
 		fmt.Sprintf("%d.%d.%d", version.Major, version.Minor, version.Patch),
@@ -62,17 +55,6 @@ func CurrentGitTag() (string, error) {
 		return "", err
 	}
 	return strings.Trim(string(out), "\n"), nil
-}
-
-// UseDefaultTag for keep only default branch for latest tag
-func UseDefaultTag(ref, defaultBranch string) bool {
-	if strings.HasPrefix(ref, "refs/tags/") {
-		return true
-	}
-	if stripHeadPrefix(ref) == defaultBranch {
-		return true
-	}
-	return false
 }
 
 func stripHeadPrefix(ref string) string {
