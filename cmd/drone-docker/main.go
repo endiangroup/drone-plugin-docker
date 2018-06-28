@@ -262,7 +262,7 @@ func run(c *cli.Context) error {
 	}
 
 	if c.Bool("tags.auto") {
-		plugin.Build.Tags = docker.DefaultTag(c.String("commit.ref"))
+		plugin.Build.Tags = docker.DefaultTags(c.String("commit.ref"))
 	}
 
 	return plugin.Exec()
