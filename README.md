@@ -6,7 +6,7 @@ This fork adds the facility to tag images using the current git tag. The functio
 
 ```
   some_pipeline:
-    image: kowalatech/drone-docker
+    image: endian/drone-plugin-docker
     repo: kowalatech/faucet
     secrets: [ docker_username, docker_password ]
     tag: my-tag
