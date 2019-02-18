@@ -20,7 +20,7 @@ pipeline:
 
   publish:
     image: plugins/docker
-    repo: endian/drone-docker
+    repo: endian/drone-plugin-docker
     tags: [ "latest" ]
     secrets: [ docker_username, docker_password ]
     dockerfile: docker/Dockerfile
